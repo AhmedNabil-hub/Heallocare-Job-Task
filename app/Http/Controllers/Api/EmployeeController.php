@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Employee;
+use App\Models\Department;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Api\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\EmployeeLeaveRequestNotification;
 use App\Http\Requests\Api\Employee\StoreEmployeeRequest;
 use App\Http\Requests\Api\Employee\UpdateEmployeeRequest;
-use App\Models\Department;
-use App\Notifications\EmployeeLeaveRequestNotification;
+use App\Http\Resources\Api\Employee\EmployeeIndexResource;
+use App\Http\Resources\Api\Employee\EmployeeShowResource;
 
 class EmployeeController extends Controller
 {
@@ -59,7 +61,7 @@ class EmployeeController extends Controller
 
       return response()->json(
         [
-          'data' => $employees,
+          'data' => EmployeeIndexResource::collection($employees),
         ],
         Response::HTTP_OK,
       );
@@ -127,7 +129,7 @@ class EmployeeController extends Controller
 
       return response()->json(
         [
-          'data' => $employee,
+          'data' => new EmployeeShowResource($employee),
         ],
         Response::HTTP_OK,
       );
